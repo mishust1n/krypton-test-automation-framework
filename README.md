@@ -10,8 +10,7 @@ Based on testNg framework and implemented reporting, logging, configuration, enc
 
 ## Execution
 
-```mvn test -Dscope=multithread```
-```mvn test -Dscope=multithread```
+```mvn test -Dscope=full```
 
 
 
