@@ -6,7 +6,7 @@
 
     <groupId>io.mishustin.krypton</groupId>
     <artifactId>krypton-test-automation-framework</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -73,7 +73,8 @@
                 <version>3.0.0-M5</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <suiteXmlFile>scopes/${scope}.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>

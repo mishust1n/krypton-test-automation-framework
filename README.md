@@ -8,6 +8,11 @@ Foundation for the test automation projects.
 
 Based on testNg framework and implemented reporting, logging, configuration, encrypted files, multithreading.
 
+## Execution
+
+```mvn test -Dscope=multithread```
+```mvn test -Dscope=multithread```
+
 
 
 
