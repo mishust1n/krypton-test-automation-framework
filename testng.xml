@@ -1,11 +1,13 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
-<suite name="Test suite" parallel="methods" thread-count="4">
-<!--<suite name="Test suite" >-->
+<suite name="Test suite" parallel="methods" thread-count="10" data-provider-thread-count="10">
+    <!--<suite name="Test suite" >-->
     <test name="Test test">
         <classes>
+            <class name="io.mishustin.tests.api.PetStoreGet"/>
             <class name="io.mishustin.tests.TextOutputTest"/>
-            <class name="io.mishustin.tests.TestPrintClass"/>
+            <class name="io.mishustin.tests.RandomWaitTest"/>
+            <class name="io.mishustin.tests.RandomWaitTest2"/>
         </classes>
     </test>
 </suite>

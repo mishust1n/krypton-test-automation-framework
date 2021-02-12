@@ -19,6 +19,7 @@
     </properties>
 
     <dependencies>
+        <!--        BASIC DEPENDENCIES      -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -39,6 +40,13 @@
             <artifactId>extentreports</artifactId>
             <version>5.0.4</version>
         </dependency>
+        <!--        API TEST DEPENDENCIES      -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+        <!--        1WEB TEST DEPENDENCIES      -->
     </dependencies>
 
     <build>

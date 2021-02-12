@@ -83,6 +83,7 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
     @Override
     public void generateReport(List<XmlSuite> suits, List<ISuite> list1, String s) {
         LOG.info("Generate report time");
+        TestReporter.getReporter().flush();
         for (ISuite iSuite : list1) {
             Collection<ISuiteResult> values = iSuite.getResults().values();
 
