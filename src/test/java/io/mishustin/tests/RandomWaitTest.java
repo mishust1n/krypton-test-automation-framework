@@ -55,7 +55,7 @@ public class RandomWaitTest {
     @DataProvider(name = "random", parallel = true)
     public Object[][] randomDataProvider() {
         Random r = new Random();
-        int size = 250;
+        int size = 150;
         Object[][] data = new Object[size][1];
 
         for (int i = 0; i < size; i++) {

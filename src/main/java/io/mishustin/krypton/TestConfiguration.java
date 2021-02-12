@@ -12,6 +12,7 @@ public class TestConfiguration {
 
     public static String env;
     public static String host;
+    public static String webHost;
 
     private TestConfiguration() {
     }
@@ -39,5 +40,6 @@ public class TestConfiguration {
     public static void readConfig(Path path) throws IOException {
         Properties properties = readProperties(path);
         host = properties.getProperty("host");
+        webHost = properties.getProperty("web_host");
     }
 }

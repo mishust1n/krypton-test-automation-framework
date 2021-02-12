@@ -1,4 +1,4 @@
-package io.mishustin.tests.api;
+package io.mishustin.tests;
 
 import io.mishustin.krypton.TestConfiguration;
 import io.mishustin.krypton.TestNgListener;
