@@ -2,6 +2,7 @@ package io.mishustin.tests;
 
 import io.mishustin.krypton.TestConfiguration;
 import io.mishustin.krypton.TestNgListener;
+import io.mishustin.krypton.Xfail;
 import io.restassured.RestAssured;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
@@ -37,6 +38,7 @@ public class PetStoreGet {
                 .then().statusCode(200);
     }
 
+    @Xfail
     @Test
     public void getUserShouldReturnUser() {
         RestAssured

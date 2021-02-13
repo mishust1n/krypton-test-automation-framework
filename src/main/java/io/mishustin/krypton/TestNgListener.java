@@ -33,13 +33,27 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
         TestReporter.getReporter().pass(testName);
     }
 
+
+    private boolean isXfail(ITestResult iTestResult) {
+        return iTestResult.getMethod().getConstructorOrMethod().getMethod().getDeclaredAnnotation(Xfail.class) != null;
+    }
+
     @Override
     public void onTestFailure(ITestResult iTestResult) {
-        LOG.info("FAILED: {}", iTestResult.getMethod().getMethodName());
-        iTestResult.getThrowable().printStackTrace();
-        LOG.error(iTestResult.getThrowable());
         String testName = iTestResult.getMethod().getMethodName();
-        TestReporter.getReporter().fail(testName, iTestResult.getThrowable().getMessage());
+
+        if (isXfail(iTestResult)) {
+            LOG.info("XFAIL: {}", testName);
+            TestReporter.getReporter().skip(testName, iTestResult.getThrowable().getMessage());
+            TestReporter.getReporter().addLabel("XFAIL");
+            iTestResult.setStatus(ITestResult.SKIP);
+            iTestResult.setThrowable(null);
+            iTestResult.getTestContext().getFailedTests().removeResult(iTestResult);
+            iTestResult.getTestContext().getSkippedTests().addResult(iTestResult, iTestResult.getMethod());
+        } else {
+            LOG.info("FAILED: {}", testName);
+            TestReporter.getReporter().fail(testName, iTestResult.getThrowable().getMessage());
+        }
     }
 
     @Override

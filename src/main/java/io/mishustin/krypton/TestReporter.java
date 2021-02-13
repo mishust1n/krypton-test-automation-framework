@@ -108,6 +108,10 @@ public class TestReporter {
         //flush();
     }
 
+    public synchronized void addLabel(String label) {
+        currentTest.assignCategory(label);
+    }
+
     public synchronized void logImage(String base64Image) {
         String message = "<img src=\"data:image/png;base64, " + base64Image + "\" width=\"100%\" />";
         currentTest.log(Status.INFO, message);
