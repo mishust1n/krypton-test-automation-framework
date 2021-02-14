@@ -32,17 +32,13 @@ public class TestReporter {
 
     private static Map<String, ExtentTest> testNodes;
 
-    public synchronized void flush() {
-        extent.flush();
-    }
-
-    public synchronized static TestReporter getReporter() {
-        LOG.info("Get test reporter instance");
-        return reporters.get();
-    }
-
     private TestReporter() {
         LOG.info("Create test reporter instance");
+    }
+
+    public static synchronized TestReporter getReporter() {
+        LOG.info("Get test reporter instance");
+        return reporters.get();
     }
 
     public synchronized void createTestNode(String className) {
@@ -53,7 +49,11 @@ public class TestReporter {
         }
     }
 
-    public synchronized static void createReportFile() {
+    public synchronized void flush() {
+        extent.flush();
+    }
+
+    public static synchronized void createReportFile() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
         String fileName = "raport-" + LocalDateTime.now().format(formatter) + ".html";
 
@@ -74,13 +74,11 @@ public class TestReporter {
     public synchronized void createTest(String testCase, String testName) {
         LOG.debug("Create test: " + testCase + " - " + testName);
         currentTest = testNodes.get(testCase).createNode(testName);
-        //flush();
     }
 
     public synchronized void pass(String testName) {
         LOG.debug("Log passed test: " + testName);
         currentTest.pass("PASSED: " + testName);
-        //flush();
     }
 
     public synchronized void xfail(String testName, String reason) {
@@ -91,21 +89,17 @@ public class TestReporter {
     public synchronized void skip(String testName, String reason) {
         currentTest.skip("SKIPPED: " + testName);
         currentTest.skip(reason);
-        //flush();
     }
 
     public synchronized void fail(String testName, String reason) {
         if (currentTest != null) {
             currentTest.fail("FAILED: " + testName);
             currentTest.fail(reason);
-            //flush();
         }
     }
 
     public synchronized void fail(String testName, Throwable throwable) {
         currentTest.fail("FAILED: " + testName);
-        currentTest.fail(throwable.toString());
-        //flush();
     }
 
     public synchronized void addLabel(String label) {
@@ -119,6 +113,5 @@ public class TestReporter {
 
     public synchronized void log(String message) {
         currentTest.log(Status.INFO, message);
-        //flush();
     }
 }

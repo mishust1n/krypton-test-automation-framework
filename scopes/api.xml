@@ -1,9 +1,9 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
 <suite name="API Test suite">
-    <test name="Test test">
+    <test name="Test">
         <classes>
-            <class name="io.mishustin.tests.PetStoreGet"/>
+            <class name="io.mishustin.tests.PetStoreTest"/>
         </classes>
     </test>
 </suite>

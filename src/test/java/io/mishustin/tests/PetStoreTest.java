@@ -9,7 +9,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(TestNgListener.class)
-public class PetStoreGet {
+public class PetStoreTest {
 
     @BeforeClass
     public void init() {

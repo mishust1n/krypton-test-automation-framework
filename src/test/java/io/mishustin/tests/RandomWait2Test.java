@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 import java.util.Random;
 
 @Listeners(TestNgListener.class)
-public class RandomWaitTest2 {
+public class RandomWait2Test {
 
     @Test(dataProvider = "random")
     public void dataDrivenHalfWait(int time) throws InterruptedException {

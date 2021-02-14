@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
-<suite name="Full Test suite">
+<suite name="Thread Test suite" parallel="methods" thread-count="8" data-provider-thread-count="8">
     <test name="Test">
         <classes>
             <class name="io.mishustin.tests.PetStoreTest"/>

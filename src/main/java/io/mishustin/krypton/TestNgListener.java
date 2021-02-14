@@ -2,8 +2,6 @@ package io.mishustin.krypton;
 
 
 import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
 import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

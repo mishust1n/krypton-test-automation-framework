@@ -1,8 +1,7 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
-<suite name="Test suite" parallel="methods" thread-count="8" data-provider-thread-count="8">
-    <!--<suite name="Test suite" >-->
-    <test name="Test test">
+<suite name="Web Test suite">
+    <test name="Test">
         <classes>
             <class name="io.mishustin.tests.TodoWebTest"/>
         </classes>
