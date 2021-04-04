@@ -10,6 +10,7 @@ public class TestConfiguration {
     public static String env;
     public static String host;
     public static String webHost;
+    public static String jsonHost;
 
     private TestConfiguration() {
     }
@@ -38,5 +39,6 @@ public class TestConfiguration {
         Properties properties = readProperties(path);
         host = properties.getProperty("host");
         webHost = properties.getProperty("web_host");
+        jsonHost = properties.getProperty("json_host");
     }
 }
