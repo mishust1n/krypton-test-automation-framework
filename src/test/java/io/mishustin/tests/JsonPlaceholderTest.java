@@ -2,16 +2,14 @@ package io.mishustin.tests;
 
 import io.mishustin.krypton.TestConfiguration;
 import io.mishustin.krypton.TestNgListener;
-import io.mishustin.krypton.api.ApiClient;
+import io.mishustin.krypton.api.FeignApiClient;
+import io.mishustin.krypton.api.ApiResponse;
 import io.mishustin.krypton.api.JsonPlaceholderService;
 import io.mishustin.krypton.model.Post;
-import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import retrofit2.Response;
 
-import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,21 +22,22 @@ public class JsonPlaceholderTest {
 
     @BeforeClass
     public void init() {
-        service = ApiClient.getJsonPlaceholderService(TestConfiguration.jsonHost);
+        service = FeignApiClient.getJsonPlaceholderService(TestConfiguration.jsonHost);
     }
 
     @Test
-    public void getPostShouldReturnRC200() throws IOException {
-        Response<List<Post>> execute = service.getPosts().execute();
+    public void getPostShouldReturnRC200() {
+        ApiResponse<List<Post>> response = service.getPosts();
 
-        assertThat(execute.code(), is(200));
+
+        assertThat(response.code, is(200));
+        assertThat(response.getObj(), not(emptyIterable()));
     }
 
     @Test
-    public void getPostWithInvalidIdShouldReturn404() throws IOException {
-        Response<Post> execute = service.getPost(-2323).execute();
+    public void getPostWithInvalidIdShouldReturn404() {
+        ApiResponse response = service.getPost(-2323);
 
-        assertThat(execute.code(), is(404));
+        assertThat(response.code, is(404));
     }
-
 }
