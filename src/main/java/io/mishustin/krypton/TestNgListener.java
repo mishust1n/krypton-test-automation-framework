@@ -1,6 +1,8 @@
 package io.mishustin.krypton;
 
 
+import javassist.ClassPool;
+import javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.testng.*;
@@ -10,7 +12,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-public class TestNgListener implements ITestListener, IExecutionListener, IReporter, IClassListener {
+public class TestNgListener implements ITestListener, IExecutionListener, IReporter, IClassListener, IMethodInterceptor {
 
     private static final Logger LOG = LogManager.getLogger(TestNgListener.class);
 
@@ -29,13 +31,25 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
         TestReporter.getReporter().pass(testName);
     }
 
+    private boolean isXfail(ITestResult iTestResult) {
+        return iTestResult.getMethod().getConstructorOrMethod().getMethod().getDeclaredAnnotation(Xfail.class) != null;
+    }
+
     @Override
     public void onTestFailure(ITestResult iTestResult) {
-        LOG.info("FAILED: {}", iTestResult.getMethod().getMethodName());
-        iTestResult.getThrowable().printStackTrace();
-        LOG.error(iTestResult.getThrowable());
         String testName = iTestResult.getMethod().getMethodName();
-        TestReporter.getReporter().fail(testName, iTestResult.getThrowable().getMessage());
+
+        if (isXfail(iTestResult)) {
+            LOG.info("XFAIL: {}", testName);
+            TestReporter.getReporter().xfail(testName, iTestResult.getThrowable().getMessage());
+            iTestResult.setStatus(ITestResult.SKIP);
+            iTestResult.setThrowable(null);
+            iTestResult.getTestContext().getFailedTests().removeResult(iTestResult);
+            iTestResult.getTestContext().getSkippedTests().addResult(iTestResult, iTestResult.getMethod());
+        } else {
+            LOG.info("FAILED: {}", testName);
+            TestReporter.getReporter().fail(testName, iTestResult.getThrowable().getMessage());
+        }
     }
 
     @Override
@@ -77,12 +91,13 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
 
     @Override
     public void onExecutionFinish() {
-
+        TestReporter.getReporter().cleanReporters();
     }
 
     @Override
     public void generateReport(List<XmlSuite> suits, List<ISuite> list1, String s) {
         LOG.info("Generate report time");
+        TestReporter.getReporter().flush();
         for (ISuite iSuite : list1) {
             Collection<ISuiteResult> values = iSuite.getResults().values();
 
@@ -91,5 +106,29 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
             }
         }
 
+    }
+
+    @Override
+    public List<IMethodInstance> intercept(List<IMethodInstance> list, ITestContext iTestContext) {
+
+        ClassPool pool = ClassPool.getDefault();
+
+        list.sort(((obj1, obj2) -> {
+            try {
+                String obj1Class = obj1.getMethod().getTestClass().getName();
+                String obj1Method = obj1.getMethod().getMethodName();
+
+                String obj2Class = obj2.getMethod().getTestClass().getName();
+                String obj2Method = obj2.getMethod().getMethodName();
+
+                int obj1Position = pool.getMethod(obj1Class, obj1Method).getMethodInfo().getLineNumber(0);
+                int obj2Position = pool.getMethod(obj2Class, obj2Method).getMethodInfo().getLineNumber(0);
+
+                return obj1Position - obj2Position;
+            } catch (NotFoundException e) {
+                throw new ToolException(e);
+            }
+        }));
+        return list;
     }
 }

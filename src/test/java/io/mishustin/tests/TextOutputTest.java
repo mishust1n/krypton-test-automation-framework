@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 @Listeners(TestNgListener.class)
 public class TextOutputTest {
 
-
     @Test
     public void shouldPrintCurrentEpoch() {
         TestReporter.getReporter().log("" + System.currentTimeMillis());

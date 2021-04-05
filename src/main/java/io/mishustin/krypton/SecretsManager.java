@@ -37,13 +37,6 @@ public class SecretsManager {
         return secrets.getProperty(key);
     }
 
-    private static SecretKeySpec createKey(String key) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        SecretKeyFactory factory = SecretKeyFactory.getInstance(KEY_FACTORY_INSTANCE);
-        KeySpec keySpec = new PBEKeySpec(key.toCharArray(), key.getBytes(), ITERATION_COUNT, KEY_LENGTH);
-        SecretKey secretKey = factory.generateSecret(keySpec);
-        return new SecretKeySpec(secretKey.getEncoded(), ALGORITHM);
-    }
-
     public static void readSecrets(Path encryptedFile, String stringKey) throws Exception {
         SecretKeySpec secretKey = createKey(stringKey);
 
@@ -66,7 +59,14 @@ public class SecretsManager {
         clearSecret(secretKey);
     }
 
-    public static byte[] encrypt(byte[] input, SecretKeySpec key) throws Exception {
+    private static SecretKeySpec createKey(String key) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        SecretKeyFactory factory = SecretKeyFactory.getInstance(KEY_FACTORY_INSTANCE);
+        KeySpec keySpec = new PBEKeySpec(key.toCharArray(), key.getBytes(), ITERATION_COUNT, KEY_LENGTH);
+        SecretKey secretKey = factory.generateSecret(keySpec);
+        return new SecretKeySpec(secretKey.getEncoded(), ALGORITHM);
+    }
+
+    private static byte[] encrypt(byte[] input, SecretKeySpec key) throws Exception {
 
         Objects.requireNonNull(input, "Input message cannot be null");
         Objects.requireNonNull(key, "key cannot be null");
@@ -95,7 +95,7 @@ public class SecretsManager {
         return cipherText;
     }
 
-    public static byte[] decrypt(byte[] input, SecretKeySpec key) throws Exception {
+    private static byte[] decrypt(byte[] input, SecretKeySpec key) throws Exception {
         Objects.requireNonNull(input, "Input message cannot be null");
         Objects.requireNonNull(key, "key cannot be null");
 
@@ -117,7 +117,7 @@ public class SecretsManager {
         return cipher.doFinal(messageCipher);
     }
 
-    public static byte[] getIV(int bytesNum) {
+    private static byte[] getIV(int bytesNum) {
 
         if (bytesNum < 1) throw new IllegalArgumentException(
                 "Number of bytes must be greater than 0");

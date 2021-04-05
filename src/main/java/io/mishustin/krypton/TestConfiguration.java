@@ -1,8 +1,5 @@
 package io.mishustin.krypton;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -12,6 +9,8 @@ public class TestConfiguration {
 
     public static String env;
     public static String host;
+    public static String webHost;
+    public static String jsonHost;
 
     private TestConfiguration() {
     }
@@ -39,5 +38,7 @@ public class TestConfiguration {
     public static void readConfig(Path path) throws IOException {
         Properties properties = readProperties(path);
         host = properties.getProperty("host");
+        webHost = properties.getProperty("web_host");
+        jsonHost = properties.getProperty("json_host");
     }
 }

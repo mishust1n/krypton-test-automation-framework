@@ -13,19 +13,15 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class TestReporter {
 
     private static final Logger LOG = LogManager.getLogger(TestReporter.class);
-    private static ThreadLocal<TestReporter> reporters = ThreadLocal.withInitial(new Supplier<TestReporter>() {
-        @Override
-        public TestReporter get() {
-            LOG.debug("GET new test reporter instance from thread local");
-            return new TestReporter();
-        }
+    private static final ThreadLocal<TestReporter> reporters = ThreadLocal.withInitial(() -> {
+        LOG.debug("GET new test reporter instance from thread local");
+        return new TestReporter();
     });
 
     private static ExtentReports extent;
@@ -33,16 +29,16 @@ public class TestReporter {
 
     private static Map<String, ExtentTest> testNodes;
 
-    public static TestReporter getReporter() {
-        LOG.info("Get test reporter instance");
-        return reporters.get();
-    }
-
     private TestReporter() {
         LOG.info("Create test reporter instance");
     }
 
-    public void createTestNode(String className) {
+    public static synchronized TestReporter getReporter() {
+        LOG.info("Get test reporter instance");
+        return reporters.get();
+    }
+
+    public synchronized void createTestNode(String className) {
         LOG.info("Create test node: " + className);
 
         if (!testNodes.containsKey(className)) {
@@ -50,13 +46,19 @@ public class TestReporter {
         }
     }
 
-    public static void createReportFile() {
+    public synchronized void flush() {
+        extent.flush();
+    }
+
+    public static synchronized void createReportFile() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
         String fileName = "raport-" + LocalDateTime.now().format(formatter) + ".html";
 
         LOG.info("Create test report file " + fileName);
 
-        new File("reports").mkdir();
+        if (!new File("reports").mkdir()) {
+            throw new ToolException("Unable to create \"report\" folder");
+        }
 
         ExtentSparkReporter spark = new ExtentSparkReporter(Paths.get("reports", fileName).toFile())
                 .viewConfigurer()
@@ -68,59 +70,49 @@ public class TestReporter {
         testNodes = new HashMap<>();
     }
 
-    public void createTest(String testCase, String testName) {
+    public synchronized void createTest(String testCase, String testName) {
         LOG.debug("Create test: " + testCase + " - " + testName);
-
-
         currentTest = testNodes.get(testCase).createNode(testName);
-        extent.flush();
     }
 
-    public void pass(String testName) {
+    public synchronized void pass(String testName) {
         LOG.debug("Log passed test: " + testName);
         currentTest.pass("PASSED: " + testName);
-        extent.flush();
     }
 
-    public void xfail(String testName, String reason) {
+    public synchronized void xfail(String testName, String reason) {
         currentTest.assignCategory("XFAIL");
+
         skip(testName, reason);
     }
 
-    public void skip(String testName, String reason) {
+    public synchronized void skip(String testName, String reason) {
         currentTest.skip("SKIPPED: " + testName);
         currentTest.skip(reason);
-        extent.flush();
     }
 
-    public void fail(String testName, String reason) {
+    public synchronized void fail(String testName, String reason) {
         if (currentTest != null) {
             currentTest.fail("FAILED: " + testName);
             currentTest.fail(reason);
-            extent.flush();
         }
     }
 
-    public void fail(String testName, Throwable throwable) {
+    public synchronized void fail(String testName, Throwable throwable) {
         currentTest.fail("FAILED: " + testName);
-        currentTest.fail(throwable.toString());
-        extent.flush();
+        currentTest.fail(throwable);
     }
 
-    public void logImage(String base64Image) {
+    public synchronized void logImage(String base64Image) {
         String message = "<img src=\"data:image/png;base64, " + base64Image + "\" width=\"100%\" />";
         currentTest.log(Status.INFO, message);
     }
 
-    public void log(String message) {
-        System.out.println("Current test not equals null: " + currentTest != null);
-        System.out.println(message);
-        try {
-            currentTest.log(Status.INFO, message);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    public synchronized void cleanReporters() {
+        reporters.remove();
+    }
 
-        extent.flush();
+    public synchronized void log(String message) {
+        currentTest.log(Status.INFO, message);
     }
 }
