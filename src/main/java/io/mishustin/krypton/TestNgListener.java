@@ -91,7 +91,7 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
 
     @Override
     public void onExecutionFinish() {
-
+        TestReporter.getReporter().cleanReporters();
     }
 
     @Override

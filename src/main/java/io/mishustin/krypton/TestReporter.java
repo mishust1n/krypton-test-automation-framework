@@ -108,6 +108,10 @@ public class TestReporter {
         currentTest.log(Status.INFO, message);
     }
 
+    public synchronized void cleanReporters() {
+        reporters.remove();
+    }
+
     public synchronized void log(String message) {
         currentTest.log(Status.INFO, message);
     }
