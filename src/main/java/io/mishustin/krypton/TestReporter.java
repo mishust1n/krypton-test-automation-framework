@@ -19,12 +19,9 @@ import java.util.function.Supplier;
 public class TestReporter {
 
     private static final Logger LOG = LogManager.getLogger(TestReporter.class);
-    private static ThreadLocal<TestReporter> reporters = ThreadLocal.withInitial(new Supplier<TestReporter>() {
-        @Override
-        public TestReporter get() {
-            LOG.debug("GET new test reporter instance from thread local");
-            return new TestReporter();
-        }
+    private static final ThreadLocal<TestReporter> reporters = ThreadLocal.withInitial(() -> {
+        LOG.debug("GET new test reporter instance from thread local");
+        return new TestReporter();
     });
 
     private static ExtentReports extent;
@@ -59,7 +56,9 @@ public class TestReporter {
 
         LOG.info("Create test report file " + fileName);
 
-        new File("reports").mkdir();
+        if (!new File("reports").mkdir()) {
+            throw new ToolException("Unable to create \"report\" folder");
+        }
 
         ExtentSparkReporter spark = new ExtentSparkReporter(Paths.get("reports", fileName).toFile())
                 .viewConfigurer()
@@ -83,6 +82,7 @@ public class TestReporter {
 
     public synchronized void xfail(String testName, String reason) {
         currentTest.assignCategory("XFAIL");
+
         skip(testName, reason);
     }
 
@@ -100,10 +100,7 @@ public class TestReporter {
 
     public synchronized void fail(String testName, Throwable throwable) {
         currentTest.fail("FAILED: " + testName);
-    }
-
-    public synchronized void addLabel(String label) {
-        currentTest.assignCategory(label);
+        currentTest.fail(throwable);
     }
 
     public synchronized void logImage(String base64Image) {

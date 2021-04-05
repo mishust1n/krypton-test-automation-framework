@@ -3,11 +3,10 @@
 <suite name="Thread Test suite" parallel="methods" thread-count="8" data-provider-thread-count="8">
     <test name="Test">
         <classes>
-            <class name="io.mishustin.tests.PetStoreTest"/>
+            <class name="io.mishustin.tests.RestAssuredTest"/>
             <class name="io.mishustin.tests.TodoWebTest"/>
             <class name="io.mishustin.tests.TextOutputTest"/>
             <class name="io.mishustin.tests.RandomWaitTest"/>
-            <class name="io.mishustin.tests.RandomWait2Test"/>
         </classes>
     </test>
 </suite>

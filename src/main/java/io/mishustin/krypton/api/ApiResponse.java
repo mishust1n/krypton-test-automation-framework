@@ -18,7 +18,7 @@ public class ApiResponse<T> {
         this.body = body;
     }
 
-    public <Type> T getObj() {
+    public T getObj() {
         if (body == null) {
             return null;
         } else {

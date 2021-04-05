@@ -1,8 +1,5 @@
 package io.mishustin.tests;
 
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Condition.*;
-
 import com.codeborne.selenide.Configuration;
 import io.mishustin.krypton.ScreenshotListener;
 import io.mishustin.krypton.TestConfiguration;
@@ -11,6 +8,9 @@ import org.openqa.selenium.By;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 
 @Listeners({ScreenshotListener.class, TestNgListener.class})
 public class TodoWebTest {

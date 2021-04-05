@@ -31,7 +31,6 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
         TestReporter.getReporter().pass(testName);
     }
 
-
     private boolean isXfail(ITestResult iTestResult) {
         return iTestResult.getMethod().getConstructorOrMethod().getMethod().getDeclaredAnnotation(Xfail.class) != null;
     }
@@ -42,8 +41,7 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
 
         if (isXfail(iTestResult)) {
             LOG.info("XFAIL: {}", testName);
-            TestReporter.getReporter().skip(testName, iTestResult.getThrowable().getMessage());
-            TestReporter.getReporter().addLabel("XFAIL");
+            TestReporter.getReporter().xfail(testName, iTestResult.getThrowable().getMessage());
             iTestResult.setStatus(ITestResult.SKIP);
             iTestResult.setThrowable(null);
             iTestResult.getTestContext().getFailedTests().removeResult(iTestResult);
@@ -128,7 +126,7 @@ public class TestNgListener implements ITestListener, IExecutionListener, IRepor
 
                 return obj1Position - obj2Position;
             } catch (NotFoundException e) {
-                throw new RuntimeException(e);
+                throw new ToolException(e);
             }
         }));
         return list;
