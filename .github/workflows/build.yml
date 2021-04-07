@@ -18,7 +18,7 @@ jobs:
       - name: Build code
         run: mvn -B clean compile --file pom.xml
       - name: Run stable tests
-        run: mvn -B test -Dskope=stable --file pom.xml
+        run: mvn -B test -Dscope=stable --file pom.xml
       - name: Run Sonar scan
         run: mvn -B sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.organization=mishust1n --file pom.xml
         env:
