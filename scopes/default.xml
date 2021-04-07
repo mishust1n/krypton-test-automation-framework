@@ -7,6 +7,6 @@
             <class name="io.mishustin.tests.TodoWebTest"/>
             <class name="io.mishustin.tests.TextOutputTest"/>
             <class name="io.mishustin.tests.RandomWaitTest"/>
-        </classes>
+           </classes>
     </test>
 </suite>

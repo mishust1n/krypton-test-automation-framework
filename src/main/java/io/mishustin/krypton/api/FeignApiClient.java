@@ -2,8 +2,12 @@ package io.mishustin.krypton.api;
 
 import feign.Feign;
 import feign.FeignException;
+
 import feign.Response;
 import feign.codec.Decoder;
+import io.mishustin.krypton.TestReporter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.io.IOException;
@@ -12,10 +16,25 @@ import java.nio.charset.StandardCharsets;
 
 public class FeignApiClient {
 
+
+
     public static JsonPlaceholderService getJsonPlaceholderService(String baseUrl) {
 
         JsonPlaceholderService service = Feign.builder()
                 .decoder(new ResponseDecoder())
+                .logger(new feign.Logger() {
+
+                    private final Logger LOG = LogManager.getLogger(Logger.class);
+                    private final TestReporter REPORTER = TestReporter.getReporter();
+
+                    @Override
+                    protected void log(String s, String s1, Object... objects) {
+                        String msg = String.format(s1, objects);
+                        LOG.info(msg);
+                        REPORTER.log(msg);
+                    }
+                })
+                .logLevel(feign.Logger.Level.BASIC)
                 .target(JsonPlaceholderService.class, baseUrl);
 
         return (JsonPlaceholderService) wrap(service, JsonPlaceholderService.class);

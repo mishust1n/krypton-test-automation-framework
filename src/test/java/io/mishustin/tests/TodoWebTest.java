@@ -17,7 +17,7 @@ public class TodoWebTest {
 
     @BeforeClass
     public void setHeadLess() {
-        Configuration.headless = true;
+        Configuration.headless = false;
     }
 
     @Test

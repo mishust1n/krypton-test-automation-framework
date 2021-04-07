@@ -1,5 +1,6 @@
 package io.mishustin.krypton;
 
+import com.aventstack.extentreports.AnalysisStrategy;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
@@ -15,6 +16,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+
+import static com.aventstack.extentreports.AnalysisStrategy.CLASS;
+import static com.aventstack.extentreports.AnalysisStrategy.TEST;
 
 public class TestReporter {
 
@@ -56,8 +60,11 @@ public class TestReporter {
 
         LOG.info("Create test report file " + fileName);
 
-        if (!new File("reports").mkdir()) {
-            throw new ToolException("Unable to create \"report\" folder");
+        File reportsFolder = new File("reports");
+        if (!reportsFolder.exists()) {
+            if (!new File("reports").mkdir()) {
+                throw new ToolException("Unable to create \"reports\" folder");
+            }
         }
 
         ExtentSparkReporter spark = new ExtentSparkReporter(Paths.get("reports", fileName).toFile())
@@ -67,6 +74,8 @@ public class TestReporter {
 
         extent = new ExtentReports();
         extent.attachReporter(spark);
+        extent.setAnalysisStrategy(CLASS);
+
         testNodes = new HashMap<>();
     }
 
