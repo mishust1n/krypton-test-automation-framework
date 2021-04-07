@@ -1,6 +1,7 @@
-package io.mishustin.krypton;
+package io.mishustin.krypton.listeners;
 
 import com.codeborne.selenide.Selenide;
+import io.mishustin.krypton.TestReporter;
 import org.openqa.selenium.OutputType;
 import org.testng.ITestListener;
 import org.testng.ITestResult;

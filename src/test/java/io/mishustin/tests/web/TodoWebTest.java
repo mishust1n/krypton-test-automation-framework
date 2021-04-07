@@ -1,9 +1,9 @@
-package io.mishustin.tests;
+package io.mishustin.tests.web;
 
 import com.codeborne.selenide.Configuration;
-import io.mishustin.krypton.ScreenshotListener;
+import io.mishustin.krypton.listeners.ScreenshotListener;
 import io.mishustin.krypton.TestConfiguration;
-import io.mishustin.krypton.TestNgListener;
+import io.mishustin.krypton.listeners.TestNgListener;
 import org.openqa.selenium.By;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;

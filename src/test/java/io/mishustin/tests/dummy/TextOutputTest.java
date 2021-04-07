@@ -1,6 +1,6 @@
-package io.mishustin.tests;
+package io.mishustin.tests.dummy;
 
-import io.mishustin.krypton.TestNgListener;
+import io.mishustin.krypton.listeners.TestNgListener;
 import io.mishustin.krypton.TestReporter;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;

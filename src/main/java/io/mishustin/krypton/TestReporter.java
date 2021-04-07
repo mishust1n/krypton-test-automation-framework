@@ -1,11 +1,10 @@
 package io.mishustin.krypton;
 
-import com.aventstack.extentreports.AnalysisStrategy;
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.*;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.ViewName;
+import io.mishustin.krypton.exception.ToolException;
+import io.restassured.RestAssured;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,13 +14,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 import static com.aventstack.extentreports.AnalysisStrategy.CLASS;
-import static com.aventstack.extentreports.AnalysisStrategy.TEST;
 
 public class TestReporter {
 
+    private static String reportPath;
     private static final Logger LOG = LogManager.getLogger(TestReporter.class);
     private static final ThreadLocal<TestReporter> reporters = ThreadLocal.withInitial(() -> {
         LOG.debug("GET new test reporter instance from thread local");
@@ -54,11 +52,23 @@ public class TestReporter {
         extent.flush();
     }
 
+    public synchronized void logPassBddResult(String msg) throws ClassNotFoundException {
+        currentTest.createNode(new GherkinKeyword("given"), msg).pass("pass");
+    }
+
+    public synchronized void logFailBddResult(String msg) throws ClassNotFoundException {
+        currentTest.createNode(new GherkinKeyword("given"), msg).fail("pass");
+    }
+
+    public static synchronized String getReportPath() {
+        return reportPath;
+    }
+
     public static synchronized void createReportFile() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-        String fileName = "raport-" + LocalDateTime.now().format(formatter) + ".html";
+        String reportName = "report-" + LocalDateTime.now().format(formatter) + ".html";
 
-        LOG.info("Create test report file " + fileName);
+        LOG.info("Create test report file " + reportName);
 
         File reportsFolder = new File("reports");
         if (!reportsFolder.exists()) {
@@ -67,10 +77,12 @@ public class TestReporter {
             }
         }
 
-        ExtentSparkReporter spark = new ExtentSparkReporter(Paths.get("reports", fileName).toFile())
+        ExtentSparkReporter spark = new ExtentSparkReporter(Paths.get("reports", reportName).toFile())
                 .viewConfigurer()
                 .viewOrder()
                 .as(new ViewName[]{ViewName.TEST, ViewName.DASHBOARD, ViewName.EXCEPTION}).apply();
+
+        reportPath = Paths.get("reports", reportName).toAbsolutePath().toString();
 
         extent = new ExtentReports();
         extent.attachReporter(spark);

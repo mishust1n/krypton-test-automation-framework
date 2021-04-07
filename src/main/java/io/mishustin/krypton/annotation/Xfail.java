@@ -1,4 +1,4 @@
-package io.mishustin.krypton;
+package io.mishustin.krypton.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

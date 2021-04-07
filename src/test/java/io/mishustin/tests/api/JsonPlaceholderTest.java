@@ -1,7 +1,7 @@
-package io.mishustin.tests;
+package io.mishustin.tests.api;
 
 import io.mishustin.krypton.TestConfiguration;
-import io.mishustin.krypton.TestNgListener;
+import io.mishustin.krypton.listeners.TestNgListener;
 import io.mishustin.krypton.api.FeignApiClient;
 import io.mishustin.krypton.api.ApiResponse;
 import io.mishustin.krypton.api.JsonPlaceholderService;

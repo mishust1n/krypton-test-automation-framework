@@ -1,8 +1,8 @@
-package io.mishustin.tests;
+package io.mishustin.tests.api;
 
 import io.mishustin.krypton.TestConfiguration;
-import io.mishustin.krypton.TestNgListener;
-import io.mishustin.krypton.Xfail;
+import io.mishustin.krypton.listeners.TestNgListener;
+import io.mishustin.krypton.annotation.Xfail;
 import io.restassured.RestAssured;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;

@@ -1,4 +1,4 @@
-package io.mishustin.krypton;
+package io.mishustin.krypton.exception;
 
 public class ToolException extends RuntimeException {
 
