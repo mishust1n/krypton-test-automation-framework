@@ -6,7 +6,7 @@
 
     <groupId>io.mishustin.krypton</groupId>
     <artifactId>krypton-test-automation-framework</artifactId>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
